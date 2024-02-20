@@ -1,7 +1,7 @@
 // Sidebar.js
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Box, List, ListItem, ListItemIcon, ListItemText, Avatar, Button } from '@mui/material';
+import { Box, List, ListItem, ListItemText, Avatar, Button } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
