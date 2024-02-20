@@ -6,11 +6,15 @@ import Sidebar from './components/Sidebar';
 import Home from './pages/Dashboard';
 import Profile from './pages/Profile';
 import LoginPage from './pages/Login';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
 
 const theme = createTheme();
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const queryClient = new QueryClient();
+
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -23,6 +27,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
+      <QueryClientProvider client={queryClient}>
         {isLoggedIn ? (
           <div style={{ display: 'flex' }}>
             <Sidebar onLogout={handleLogout} />
@@ -39,6 +44,7 @@ function App() {
             <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           </Routes>
         )}
+        </QueryClientProvider>
       </Router>
     </ThemeProvider>
   );
