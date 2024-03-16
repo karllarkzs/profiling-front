@@ -27,6 +27,8 @@ function Dashboard() {
   const [selectedDate, setSelectedDate] = useState(null); // State for selected date
   const { data: patientsData, isLoading, isError, error } = useFetchPatients(); // Fetch patient data
 
+  console.log("PD", patientsData);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -49,6 +51,18 @@ function Dashboard() {
       minute: "2-digit",
     });
     return `${formattedDate} - ${formattedTime}`;
+  };
+
+  const formatBDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = {
+      month: "long", // Full month name
+      day: "numeric", // Day of the month
+      year: "numeric", // Full year
+    };
+    const formattedDate = date.toLocaleDateString(undefined, options);
+
+    return `${formattedDate}`;
   };
 
   const filteredPatients = patientsData
@@ -97,72 +111,79 @@ function Dashboard() {
   if (isError) return <div>Error: {error.message}</div>; // Render error message if fetching data fails
 
   return (
-    <Box sx={{ backgroundColor: "rgb(247, 249, 252)", padding: "12px" }}>
-      <Typography gutterBottom>Patient List</Typography>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          marginBottom: "16px",
-          width: "100%",
-        }}
-      >
-        {/* Search by Name */}
-        <TextField
-          label="Search by Name"
-          variant="outlined"
-          value={searchName}
-          onChange={(e) => setSearchName(e.target.value)}
-          style={{ flex: 1, marginRight: "16px" }}
-          size="small"
-        />
-
-        {/* Clear Search Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setSearchName("")}
-          size="medium"
-          sx={{ marginRight: "16px" }}
-        >
-          Clear
-        </Button>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            label="Filter by Date"
-            value={selectedDate}
-            onChange={handleDateChange}
-            sx={{
-              minWidth: 250,
-              "& input": {
-                height: "0.4375em", // Set the height of the input field
-              },
-              "& .MuiInputLabel-root": {
-                top: "-7px", // Adjust vertical alignment of the label
-              },
-            }}
-            slotProps={{
-              textField: {
-                InputProps: {
-                  startAdornment: selectedDate && (
-                    <IconButton
-                      onClick={() => setSelectedDate(null)}
-                      color="primary"
-                      sx={{ marginRight: "8px" }} // Add padding to the right of the IconButton
-                    >
-                      <Clear />
-                    </IconButton>
-                  ),
-                },
-              },
-            }}
-          />
-        </LocalizationProvider>
-      </Box>
-
+    <Box sx={{ backgroundColor: "rgb(247, 249, 252)", padding: "10px" }}>
       <Box
         component={Paper}
-        sx={{ backgroundColor: "white", borderRadius: "8px" }}
+        sx={{ backgroundColor: "white", padding: "8px", boxShadow: "none" }}
+      >
+        <Typography gutterBottom>Patient List</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          {/* Search by Name */}
+          <TextField
+            label="Search by Name"
+            variant="outlined"
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
+            style={{ flex: 1, marginRight: "16px" }}
+            size="small"
+          />
+
+          {/* Clear Search Button */}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setSearchName("")}
+            size="medium"
+            sx={{ marginRight: "16px" }}
+          >
+            Clear
+          </Button>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Filter by Date"
+              value={selectedDate}
+              onChange={handleDateChange}
+              sx={{
+                minWidth: 250,
+                "& input": {
+                  height: "0.4375em", // Set the height of the input field
+                },
+                "& .MuiInputLabel-root": {
+                  top: "-7px", // Adjust vertical alignment of the label
+                },
+              }}
+              slotProps={{
+                textField: {
+                  InputProps: {
+                    startAdornment: selectedDate && (
+                      <IconButton
+                        onClick={() => setSelectedDate(null)}
+                        color="primary"
+                        sx={{ marginRight: "8px" }} // Add padding to the right of the IconButton
+                      >
+                        <Clear />
+                      </IconButton>
+                    ),
+                  },
+                },
+              }}
+            />
+          </LocalizationProvider>
+        </Box>
+      </Box>
+      <Box
+        component={Paper}
+        sx={{
+          backgroundColor: "white",
+          marginTop: "15px",
+          boxShadow: "none",
+        }}
       >
         <TableContainer>
           <Table>
@@ -186,7 +207,7 @@ function Dashboard() {
                     <TableRow key={patient.id}>
                       <TableCell>{patient.first_name}</TableCell>
                       <TableCell>{patient.last_name}</TableCell>
-                      <TableCell>{patient.birthdate}</TableCell>
+                      <TableCell>{formatBDate(patient.birthdate)}</TableCell>
                       <TableCell>{patient.age}</TableCell>
                       <TableCell>{patient.gender}</TableCell>
                       <TableCell>{patient.contact_number}</TableCell>

@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar";
 import Home from "./pages/Dashboard";
 import Profile from "./pages/CreatePatient";
 import LoginPage from "./pages/Login";
+import Patient from "./pages/Patient";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { getUsers } from "./api";
 import { Snackbar } from "@mui/material";
@@ -106,7 +107,8 @@ function App() {
               <div style={{ flex: 1, paddingLeft: "250px" }}>
                 <Routes>
                   <Route path="/" element={<Home />} />
-                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/create-patient" element={<Profile />} />
+                  <Route path="/patient/:id" element={<Patient />} />
                 </Routes>
               </div>
             </div>

@@ -19,6 +19,13 @@ export const useFetchPatients = () => {
   });
 };
 
+export const useFetchPatientById = (id) => {
+  return useQuery(["patient", id], async () => {
+    const response = await axiosInstance.get(`/patients/${id}`);
+    return response.data;
+  });
+};
+
 export const createPatient = async (patientData) => {
   try {
     const response = await axiosInstance.post("/patients", {

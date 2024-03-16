@@ -42,11 +42,11 @@ function Sidebar({ onLogout }) {
           </Avatar>
           <ListItemText sx={{ paddingLeft: "10px" }} primary="Dashboard" />
         </ListItem>
-        <ListItem button component={Link} to="/profile">
+        <ListItem button component={Link} to="/create-patient">
           <Avatar
             sx={{
               backgroundColor:
-                location.pathname === "/profile"
+                location.pathname === "/create-patient"
                   ? "rgb(188, 120, 255)"
                   : "transparent",
             }}

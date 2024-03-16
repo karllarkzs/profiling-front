@@ -3,11 +3,13 @@ import {
   TextField,
   Grid,
   Button,
-  Paper,
+  Card,
+  CardContent,
   Typography,
   MenuItem,
+  Container,
 } from "@mui/material";
-import { createPatient, createDiagnostic } from "../api";
+import { createPatient } from "../api";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -27,6 +29,7 @@ function CreatePatient() {
     contact_number: "",
     address: "",
     emergency_contact: "",
+    emergency_contact_name: "",
     height: "",
     weight: "",
     blood_pressure: "",
@@ -73,10 +76,12 @@ function CreatePatient() {
         middle_name: "",
         last_name: "",
         birthdate: null,
+        age: "",
         gender: "",
-        contact_info: "",
+        contact_number: "",
         address: "",
         emergency_contact: "",
+        emergency_contact_name: "",
         height: "",
         weight: "",
         blood_pressure: "",
@@ -88,167 +93,190 @@ function CreatePatient() {
   };
 
   return (
-    <Paper elevation={3} style={{ padding: "20px" }}>
-      <Typography variant="h5" align="center" gutterBottom>
-        Add New Patient
-      </Typography>
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="First Name"
-              name="first_name"
-              value={formData.first_name}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Middle Name"
-              name="middle_name"
-              value={formData.middle_name}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Last Name"
-              name="last_name"
-              value={formData.last_name}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Age"
-              name="age"
-              value={formData.age}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Birthday"
-                name="birthdate"
-                value={formData.birthdate}
-                onChange={(date) => handleDateChange(date)}
-                slotProps={{
-                  textField: {
-                    InputProps: {
-                      startAdornment: selectedDate ? (
-                        <IconButton
-                          onClick={() => handleDateChange(null)} // Clear the date when clicked
-                          color="primary"
-                          sx={{
-                            marginRight: "8px", // Add padding to the right of the IconButton
-                          }}
-                        >
-                          <Clear />
-                        </IconButton>
-                      ) : null, // Render nothing if no date is selected
-                    },
-                  },
-                }}
-              />
-            </LocalizationProvider>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              select
-              label="Gender"
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              fullWidth
-              required
+    <Container
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+      }}
+    >
+      <Card elevation={10} style={{ margin: "20px" }}>
+        <CardContent>
+          <Typography variant="h5" align="center" gutterBottom>
+            ADD PATIENT
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="First Name"
+                  name="first_name"
+                  value={formData.first_name}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Middle Name"
+                  name="middle_name"
+                  value={formData.middle_name}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Last Name"
+                  name="last_name"
+                  value={formData.last_name}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Age"
+                  name="age"
+                  value={formData.age}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Birthday"
+                    name="birthdate"
+                    value={formData.birthdate}
+                    onChange={(date) => handleDateChange(date)}
+                    slotProps={{
+                      textField: {
+                        InputProps: {
+                          startAdornment: selectedDate ? (
+                            <IconButton
+                              onClick={() => handleDateChange(null)} // Clear the date when clicked
+                              color="primary"
+                              sx={{
+                                marginRight: "8px", // Add padding to the right of the IconButton
+                              }}
+                            >
+                              <Clear />
+                            </IconButton>
+                          ) : null, // Render nothing if no date is selected
+                        },
+                      },
+                    }}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  select
+                  label="Gender"
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                >
+                  <MenuItem value="male">Male</MenuItem>
+                  <MenuItem value="female">Female</MenuItem>
+                  <MenuItem value="">-</MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Contact Info"
+                  name="contact_number"
+                  value={formData.contact_number}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Height"
+                  name="height"
+                  value={formData.height}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Weight"
+                  name="weight"
+                  value={formData.weight}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Blood Pressure"
+                  name="blood_pressure"
+                  value={formData.blood_pressure}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Blood Type"
+                  name="blood_type"
+                  value={formData.blood_type}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Emergency Contact Name"
+                  name="emergency_contact_name"
+                  value={formData.emergency_contact_name}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Emergency Contact"
+                  name="emergency_contact"
+                  value={formData.emergency_contact}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              justifyContent="center"
+              style={{ marginTop: "20px" }}
             >
-              <MenuItem value="male">Male</MenuItem>
-              <MenuItem value="female">Female</MenuItem>
-              <MenuItem value="">-</MenuItem>
-            </TextField>
-          </Grid>
-
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Contact Info"
-              name="contact_number"
-              value={formData.contact_number}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Height"
-              name="height"
-              value={formData.height}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Weight"
-              name="weight"
-              value={formData.weight}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Blood Pressure"
-              name="blood_pressure"
-              value={formData.blood_pressure}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Blood Type"
-              name="blood_type"
-              value={formData.blood_type}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Emergency Contact"
-              name="emergency_contact"
-              value={formData.emergency_contact}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-        </Grid>
-        <Grid container justifyContent="center" style={{ marginTop: "20px" }}>
-          <Grid item>
-            <Button type="submit" variant="contained" color="primary">
-              Submit
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-    </Paper>
+              <Grid item>
+                <Button type="submit" variant="contained" color="primary">
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </CardContent>
+      </Card>
+    </Container>
   );
 }
 
