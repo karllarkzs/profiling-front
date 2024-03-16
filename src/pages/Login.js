@@ -1,45 +1,48 @@
-// LoginPage.js
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Box, TextField, Button } from '@mui/material';
+import React, { useState } from "react";
+import { Box, TextField, Button, Snackbar } from "@mui/material";
+import { Alert } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useLogin } from "../api";
 
 function LoginPage({ onLogin }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null); // State for error message
+  const loginUser = useLogin();
+  const navigate = useNavigate(); // Get the navigate function
 
-  const handleLogin = () => {
-    // For now, let's use a static username and password
-    const validUsername = 'user';
-    const validPassword = 'password';
-
-    // Check if entered username and password match
-    if (username === validUsername && password === validPassword) {
-      // Call the onLogin function passed from parent component (App.js)
-      onLogin();
-      // Redirect to homepage
-      navigate('/');
-    } else {
-      // Display an error message or handle invalid credentials
-      alert('Invalid username or password');
+  const handleLogin = async () => {
+    console.log("Attempting login...");
+    try {
+      const data = await loginUser({ identifier, password });
+      console.log("Login successful: loginpage", data);
+      onLogin(data);
+      navigate("/"); // Use navigate to redirect to the home page
+    } catch (error) {
+      console.error("Login failed:", error);
+      setError("Incorrect username or password"); // Set error message
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setError(null); // Clear error message when Snackbar is closed
   };
 
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
       }}
     >
       <TextField
-        label="Username"
+        label="Username or Email"
         variant="outlined"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        value={identifier}
+        onChange={(e) => setIdentifier(e.target.value)}
         sx={{ marginBottom: 2 }}
       />
       <TextField
@@ -53,6 +56,19 @@ function LoginPage({ onLogin }) {
       <Button variant="contained" onClick={handleLogin}>
         Login
       </Button>
+      <Snackbar
+        open={!!error}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {error}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

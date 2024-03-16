@@ -1,51 +1,134 @@
-// App.js
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Sidebar from './components/Sidebar';
-import Home from './pages/Dashboard';
-import Profile from './pages/Profile';
-import LoginPage from './pages/Login';
-import { QueryClient, QueryClientProvider } from 'react-query';
-
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import Sidebar from "./components/Sidebar";
+import Home from "./pages/Dashboard";
+import Profile from "./pages/CreatePatient";
+import LoginPage from "./pages/Login";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { getUsers } from "./api";
+import { Snackbar } from "@mui/material";
+import { Alert } from "@mui/material";
 
 const theme = createTheme();
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [appState, setAppState] = useState({
+    isLoggedIn: false,
+    snackbar: {
+      open: false,
+      message: "",
+      severity: "success",
+    },
+  });
   const queryClient = new QueryClient();
 
+  useEffect(() => {
+    // Check if the user is already authenticated when the component mounts
+    const checkAuthentication = async () => {
+      const storedAuth = localStorage.getItem("isLoggedIn");
+      if (storedAuth) {
+        setAppState((prevState) => ({
+          ...prevState,
+          isLoggedIn: true,
+        }));
+      }
+    };
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
+    checkAuthentication();
+  }, []); // Run this effect only once, when the component mounts
+
+  const handleLogin = async (loginData) => {
+    try {
+      const users = await getUsers();
+      const matchedUser = users.find(
+        (user) => user.username === loginData?.user.username
+      );
+      if (matchedUser) {
+        setAppState((prevState) => ({
+          ...prevState,
+          isLoggedIn: true,
+          snackbar: {
+            open: true,
+            message: "Login successful",
+            severity: "success",
+          },
+        }));
+        localStorage.setItem("isLoggedIn", "true"); // Store authentication status in local storage
+      } else {
+        setAppState((prevState) => ({
+          ...prevState,
+          snackbar: {
+            open: true,
+            message: "Incorrect username or password",
+            severity: "error",
+          },
+        }));
+      }
+    } catch (error) {
+      console.error("Error checking user:", error);
+      setAppState((prevState) => ({
+        ...prevState,
+        snackbar: {
+          open: true,
+          message: "An error occurred while logging in",
+          severity: "error",
+        },
+      }));
+    }
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
+    setAppState((prevState) => ({
+      ...prevState,
+      isLoggedIn: false,
+    }));
+    localStorage.removeItem("isLoggedIn"); // Remove authentication status from local storage
+  };
+
+  const handleCloseSnackbar = () => {
+    setAppState((prevState) => ({
+      ...prevState,
+      snackbar: {
+        ...prevState.snackbar,
+        open: false,
+      },
+    }));
   };
 
   return (
     <ThemeProvider theme={theme}>
       <Router>
-      <QueryClientProvider client={queryClient}>
-        {isLoggedIn ? (
-          <div style={{ display: 'flex' }}>
-            <Sidebar onLogout={handleLogout} />
-            <div style={{ flex: 1, paddingLeft: '250px' }}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/profile" element={<Profile />} />
-              </Routes>
+        <QueryClientProvider client={queryClient}>
+          {appState.isLoggedIn ? (
+            <div style={{ display: "flex" }}>
+              <Sidebar onLogout={handleLogout} />
+              <div style={{ flex: 1, paddingLeft: "250px" }}>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/profile" element={<Profile />} />
+                </Routes>
+              </div>
             </div>
-          </div>
-        ) : (
-          <Routes>
-            <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-          </Routes>
-        )}
+          ) : (
+            <Routes>
+              <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
+            </Routes>
+          )}
         </QueryClientProvider>
       </Router>
+      <Snackbar
+        open={appState.snackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={appState.snackbar.severity}
+        >
+          {appState.snackbar.message}
+        </Alert>
+      </Snackbar>
     </ThemeProvider>
   );
 }
