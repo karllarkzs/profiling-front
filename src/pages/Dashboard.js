@@ -19,9 +19,12 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Clear } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import Divider from "../components/Divider";
 
 function Dashboard() {
   const [page, setPage] = useState(0);
+  const navigate = useNavigate();
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchName, setSearchName] = useState("");
   const [selectedDate, setSelectedDate] = useState(null); // State for selected date
@@ -112,11 +115,18 @@ function Dashboard() {
 
   return (
     <Box sx={{ backgroundColor: "rgb(247, 249, 252)", padding: "10px" }}>
+      <Box py={1}>
+        <Divider title="PATIENT LIST" />
+      </Box>
       <Box
         component={Paper}
-        sx={{ backgroundColor: "white", padding: "8px", boxShadow: "none" }}
+        sx={{
+          backgroundColor: "white",
+          padding: "8px",
+          boxShadow: "none",
+          border: "1px dotted gray",
+        }}
       >
-        <Typography gutterBottom>Patient List</Typography>
         <Box
           sx={{
             display: "flex",
@@ -181,8 +191,9 @@ function Dashboard() {
         component={Paper}
         sx={{
           backgroundColor: "white",
-          marginTop: "15px",
+          marginTop: "10px",
           boxShadow: "none",
+          border: "1px dotted gray",
         }}
       >
         <TableContainer>
@@ -204,7 +215,11 @@ function Dashboard() {
                 ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((patient) =>
                   patient ? ( // Ensure patient exists before rendering the row
-                    <TableRow key={patient.id}>
+                    <TableRow
+                      key={patient.id}
+                      onClick={() => navigate(`/patient/${patient.id}`)}
+                      style={{ cursor: "pointer" }}
+                    >
                       <TableCell>{patient.first_name}</TableCell>
                       <TableCell>{patient.last_name}</TableCell>
                       <TableCell>{formatBDate(patient.birthdate)}</TableCell>

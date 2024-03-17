@@ -5,7 +5,7 @@ import {
   Button,
   Card,
   CardContent,
-  Typography,
+  Box,
   MenuItem,
   Container,
 } from "@mui/material";
@@ -15,6 +15,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Clear } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import Divider from "../components/Divider";
 
 function CreatePatient() {
   const [selectedDate, setSelectedDate] = useState(null); // State for selected date
@@ -95,17 +96,16 @@ function CreatePatient() {
   return (
     <Container
       sx={{
-        display: "flex",
         justifyContent: "center",
         alignItems: "center",
         minHeight: "100vh",
       }}
     >
-      <Card elevation={10} style={{ margin: "20px" }}>
+      <Box py={3}>
+        <Divider title="CREATE PATIENT" />
+      </Box>
+      <Card elevation={10} style={{ marginLeft: "10px", marginRight: "10px" }}>
         <CardContent>
-          <Typography variant="h5" align="center" gutterBottom>
-            ADD PATIENT
-          </Typography>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -268,7 +268,11 @@ function CreatePatient() {
               style={{ marginTop: "20px" }}
             >
               <Grid item>
-                <Button type="submit" variant="contained" color="primary">
+                <Button
+                  type="submit"
+                  variant="contained"
+                  style={{ backgroundColor: "rgb(188, 120, 255)" }}
+                >
                   Submit
                 </Button>
               </Grid>

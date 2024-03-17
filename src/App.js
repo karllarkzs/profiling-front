@@ -102,7 +102,13 @@ function App() {
       <Router>
         <QueryClientProvider client={queryClient}>
           {appState.isLoggedIn ? (
-            <div style={{ display: "flex" }}>
+            <div
+              style={{
+                display: "flex",
+                backgroundColor: " rgb(247, 249, 252)",
+                height: "100vh",
+              }}
+            >
               <Sidebar onLogout={handleLogout} />
               <div style={{ flex: 1, paddingLeft: "250px" }}>
                 <Routes>
