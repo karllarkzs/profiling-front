@@ -1,40 +1,49 @@
 import React from "react";
 import { Box, Tab as MuiTab, Tabs as MuiTabs } from "@mui/material";
-import { withStyles } from "@mui/styles";
 
-export const Tabs = withStyles((theme) => ({
-  root: {
-    color: theme.palette.primary.main,
-    backgroundColor: "#eaeaea",
-    borderBottom: "1px solid #e8e8e8",
-  },
-  indicator: {
-    backgroundColor: theme.palette.primary.main,
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
-  },
-}))(MuiTabs);
+export const Tabs = (props) => (
+  <MuiTabs
+    {...props}
+    sx={{
+      "& .MuiTabs-root": {
+        color: "black",
+        backgroundColor: "#f3f3ec", // Change background color here
+        borderBottom: "1px solid #e8e8e8",
+      },
+      "& .MuiTabs-indicator": {
+        backgroundColor: "black",
+        color: "black",
+        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+      },
+    }}
+  />
+);
 
-export const Tab = withStyles((theme) => ({
-  root: {
-    textTransform: "none",
-    minWidth: 72,
-    fontSize: 12,
-    "&:hover": {
-      color: "black",
-      opacity: 1,
-    },
-    "&$selected": {
-      color: "black",
-      fontWeight: theme.typography.fontWeightMedium,
-      fontSize: 14,
-    },
-    "&$focusVisible": {
-      color: "inherit", // Remove the default blue color when focused
-    },
-  },
-  selected: {},
-  focusVisible: {}, // Add focusVisible state
-}))((props) => <MuiTab disableRipple {...props} />);
+export const Tab = (props) => (
+  <MuiTab
+    disableRipple
+    {...props}
+    sx={{
+      root: {
+        textTransform: "none",
+        minWidth: 72,
+        fontSize: 12,
+        "&:hover": {
+          color: "black",
+          opacity: 1,
+        },
+        "&.Mui-selected": {
+          color: "black",
+          fontWeight: 100,
+          fontSize: 14,
+        },
+        "&.Mui-focusVisible": {
+          color: "inherit", // Remove the default blue color when focused
+        },
+      },
+    }}
+  />
+);
 
 export const TabPanel = (props) => {
   const { children, value, index, ...other } = props;

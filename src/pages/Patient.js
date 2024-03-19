@@ -189,11 +189,19 @@ function Patient() {
           </Box>
         </Box>
       </Box>
-      <AppBar position="relative">
+      <AppBar position="relative" sx={{ backgroundColor: "#e1e3e5" }}>
         <Tabs
           value={selectedTab}
           onChange={handleChangeTab}
           variant="fullWidth"
+          sx={{
+            "& .MuiTabs-root": {
+              backgroundColor: "#f3f3ec",
+            },
+            "& .Mui-selected": {
+              backgroundColor: "black",
+            },
+          }}
         >
           <Tab label="CONDITION" />
           <Tab label="DIAGNOSTIC" />
