@@ -18,13 +18,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Divider from "../components/Divider";
 import { Tabs, Tab, TabPanel } from "../components/Tabs";
-import { useFetchPatientById } from "../api";
+import { useFetchPatientById, useFetchDiagnostics } from "../api";
 import AddCardRoundedIcon from "@mui/icons-material/AddCardRounded";
 import AddConditionModal from "../components/AddConditionModal";
 import ConfirmDeleteModal from "../components/DeleteModal";
 import AddMedicationModal from "../components/AddMedicationModal";
 import EditDeleteMOdal from "../components/EditCondtionModal";
+import AddDiagnosticsModal from "../components/AddDiagnosticModal";
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
+
 function Patient() {
   const { id } = useParams();
   const [selectedTab, setSelectedTab] = useState(0);
@@ -39,12 +41,24 @@ function Patient() {
   const [selectedConditionDescription, setSelectedConditionDescription] =
     useState("");
 
+  const [isAddDiagnosticsModalOpen, setIsAddDiagnosticsModalOpen] =
+    useState(false);
+
   const {
     data: patientData,
     isLoading,
     isError,
     refetch,
   } = useFetchPatientById(id);
+  const { data: diagnostics } = useFetchDiagnostics();
+
+  const handleOpenDiagnosticsModal = () => {
+    setIsAddDiagnosticsModalOpen(true);
+  };
+
+  const handleCloseDiagnosticsModal = () => {
+    setIsAddDiagnosticsModalOpen(false);
+  };
 
   const handleOpenModal = () => {
     setIsAddConditionModalOpen(true);
@@ -303,7 +317,36 @@ function Patient() {
         </Box>
       </TabPanel>
       <TabPanel value={selectedTab} index={1}>
-        History content goes here
+        <Typography variant="h6">Diagnostics Component</Typography>
+        <Box mt={2} display="flex" justifyContent="flex-end">
+          <Button
+            onClick={handleOpenDiagnosticsModal}
+            variant="contained"
+            color="primary"
+          >
+            Add Diagnostic
+          </Button>
+        </Box>
+        <AddDiagnosticsModal
+          open={isAddDiagnosticsModalOpen}
+          onClose={handleCloseDiagnosticsModal}
+        />
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          {diagnostics &&
+            diagnostics.map((diagnostic) => (
+              <Card key={diagnostic.id} style={{ width: 300, margin: 10 }}>
+                <CardContent>
+                  <Typography variant="h6">{diagnostic.name}</Typography>
+                  <iframe
+                    src={`https://profiling-2024-45cbe2fd9ee2.herokuapp.com${diagnostic.url}`}
+                    width="100%"
+                    height="300px"
+                    title="Diagnostic PDF"
+                  ></iframe>
+                </CardContent>
+              </Card>
+            ))}
+        </div>
       </TabPanel>
       <TabPanel value={selectedTab} index={2}>
         Appointments content goes here
