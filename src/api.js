@@ -39,6 +39,55 @@ export const createPatient = async (patientData) => {
   }
 };
 
+export const createMedication = async (medicationData) => {
+  try {
+    const response = await axiosInstance.post("/medications", {
+      data: medicationData,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error here
+    console.error("Error creating patient:", error);
+    throw error; // Rethrow the error to be caught by the caller
+  }
+};
+
+export const deleteCondition = async (conditionId) => {
+  try {
+    const response = await axiosInstance.put(`/conditions/${conditionId}`, {
+      data: {
+        isDeleted: true,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error here
+    console.error("Error creating patient:", error);
+    throw error;
+  }
+};
+
+export const editCondition = async (
+  conditionId,
+  conditionName,
+  conditionDescription
+) => {
+  console.log("name", conditionName);
+  try {
+    const response = await axiosInstance.put(`/conditions/${conditionId}`, {
+      data: {
+        name: conditionName,
+        description: conditionDescription,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error here
+    console.error("Error creating patient:", error);
+    throw error; // Rethrow the error to be caught by the caller
+  }
+};
+
 // export const createDiagnostic = async (formDataDiag, file) => {
 //   try {
 //     const response = await axiosInstance.post("/diagnostics", {
@@ -78,7 +127,23 @@ export const createPatient = async (patientData) => {
 //     throw error; // Rethrow the error to be caught by the caller
 //   }
 // };
+export const createCondition = async (patientId, name, description) => {
+  const url = `${process.env.REACT_APP_API_BASE_URL}conditions`;
 
+  try {
+    const response = await axiosInstance.post(url, {
+      data: {
+        patientId: patientId,
+        name: name,
+        description: description,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error creating condition:", error);
+    throw error;
+  }
+};
 export const useLogin = () => {
   const loginUser = async (loginData) => {
     try {

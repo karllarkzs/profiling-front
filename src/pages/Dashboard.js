@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Box,
-  Typography,
   Table,
   TableBody,
   TableCell,
@@ -121,10 +120,9 @@ function Dashboard() {
       <Box
         component={Paper}
         sx={{
-          backgroundColor: "white",
+          backgroundColor: "transparent",
           padding: "8px",
           boxShadow: "none",
-          border: "1px dotted gray",
         }}
       >
         <Box
@@ -140,7 +138,7 @@ function Dashboard() {
             variant="outlined"
             value={searchName}
             onChange={(e) => setSearchName(e.target.value)}
-            style={{ flex: 1, marginRight: "16px" }}
+            style={{ flex: 1, marginRight: "16px", backgroundColor: "none" }}
             size="small"
           />
 

@@ -19,13 +19,76 @@ import EditIcon from "@mui/icons-material/Edit";
 import Divider from "../components/Divider";
 import { Tabs, Tab, TabPanel } from "../components/Tabs";
 import { useFetchPatientById } from "../api";
-
+import AddCardRoundedIcon from "@mui/icons-material/AddCardRounded";
+import AddConditionModal from "../components/AddConditionModal";
+import ConfirmDeleteModal from "../components/DeleteModal";
+import AddMedicationModal from "../components/AddMedicationModal";
+import EditDeleteMOdal from "../components/EditCondtionModal";
+import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
 function Patient() {
   const { id } = useParams();
-
   const [selectedTab, setSelectedTab] = useState(0);
+  const [isAddConditionModalOpen, setIsAddConditionModalOpen] = useState(false);
+  const [isAddMedicationModalOpen, setIsAddMedicationModalOpen] =
+    useState(false);
+  const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] =
+    useState(false);
+  const [isEditModal, setIsEditModal] = useState(false);
+  const [selectedConditionId, setSelectedConditionId] = useState(null);
+  const [selectedCondtionName, setSelectedConditionName] = useState("");
+  const [selectedConditionDescription, setSelectedConditionDescription] =
+    useState("");
 
-  const { data: patientData, isLoading, isError } = useFetchPatientById(id);
+  const {
+    data: patientData,
+    isLoading,
+    isError,
+    refetch,
+  } = useFetchPatientById(id);
+
+  const handleOpenModal = () => {
+    setIsAddConditionModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsAddConditionModalOpen(false);
+  };
+
+  const handleOpenAddMedicationModal = () => {
+    setIsAddMedicationModalOpen(true);
+  };
+
+  const handleCloseAddMedicationModal = () => {
+    setIsAddMedicationModalOpen(false);
+  };
+
+  const handleOpenEditModal = (
+    conditionId,
+    conditionName,
+    conditionDescription
+  ) => {
+    setSelectedConditionId(conditionId);
+    setSelectedConditionName(conditionName);
+    setSelectedConditionDescription(conditionDescription);
+    setIsEditModal(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setSelectedConditionId(null);
+    setSelectedConditionName("");
+    setSelectedConditionDescription("");
+    setIsEditModal(false);
+  };
+
+  const handleOpenDeleteModal = (conditionId) => {
+    setSelectedConditionId(conditionId);
+    setIsDeleteConfirmationModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setSelectedConditionId(null);
+    setIsDeleteConfirmationModalOpen(false);
+  };
 
   const handleChangeTab = (event, newValue) => {
     setSelectedTab(newValue);
@@ -134,12 +197,24 @@ function Patient() {
                     justifyContent="space-between"
                     sx={{ mb: 1 }}
                   >
-                    <Typography variant="h6">Condition {index + 1}</Typography>
+                    <Typography variant="subtitle2">
+                      Date Added: {formatBDate(condition.createdAt)}
+                    </Typography>
                     <Box>
-                      <IconButton>
+                      <IconButton
+                        onClick={() =>
+                          handleOpenEditModal(
+                            condition.id,
+                            condition.name,
+                            condition.description
+                          )
+                        }
+                      >
                         <EditIcon style={{ fontSize: "22px" }} />
                       </IconButton>
-                      <IconButton>
+                      <IconButton
+                        onClick={() => handleOpenDeleteModal(condition.id)}
+                      >
                         <DeleteIcon style={{ fontSize: "22px" }} />
                       </IconButton>
                     </Box>
@@ -151,9 +226,6 @@ function Patient() {
                   >
                     <Typography variant="subtitle2">
                       Condition Name: {condition.name}
-                    </Typography>
-                    <Typography variant="subtitle2">
-                      Checkup Date: 10/21/2025
                     </Typography>
                   </Box>
 
@@ -175,9 +247,22 @@ function Patient() {
                     }}
                   />
 
-                  <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                    MEDICATIONS
-                  </Typography>
+                  <Box display="flex" alignItems="center">
+                    <Typography sx={{ fontSize: "15px" }}>
+                      MEDICATIONS
+                    </Typography>
+                    <IconButton onClick={() => handleOpenAddMedicationModal()}>
+                      <AddCircleOutlinedIcon sx={{ fontSize: "20px" }} />
+                    </IconButton>
+                    <AddMedicationModal
+                      conditionId={condition.id}
+                      conditionName={condition.name}
+                      open={isAddMedicationModalOpen}
+                      onClose={handleCloseAddMedicationModal}
+                      refetchPatientData={refetch}
+                    />
+                  </Box>
+
                   {condition.medications.map((medication, medIndex) => (
                     <Button
                       key={medIndex}
@@ -211,6 +296,11 @@ function Patient() {
             </Grid>
           ))}
         </Grid>
+        <Box mt={2} display="flex">
+          <IconButton onClick={handleOpenModal}>
+            <AddCardRoundedIcon style={{ fontSize: "3rem" }} />
+          </IconButton>
+        </Box>
       </TabPanel>
       <TabPanel value={selectedTab} index={1}>
         History content goes here
@@ -218,6 +308,26 @@ function Patient() {
       <TabPanel value={selectedTab} index={2}>
         Appointments content goes here
       </TabPanel>
+      <AddConditionModal
+        patientId={patientData.id}
+        open={isAddConditionModalOpen}
+        onClose={handleCloseModal}
+        refetchPatientData={refetch}
+      />
+      <EditDeleteMOdal
+        open={isEditModal}
+        onClose={handleCloseEditModal}
+        conditionId={selectedConditionId}
+        conditionName={selectedCondtionName}
+        conditionDescription={selectedConditionDescription}
+        refetchPatientData={refetch}
+      />
+      <ConfirmDeleteModal
+        open={isDeleteConfirmationModalOpen}
+        onClose={handleCloseDeleteModal}
+        conditionId={selectedConditionId}
+        refetchPatientData={refetch}
+      />
     </Container>
   );
 }
