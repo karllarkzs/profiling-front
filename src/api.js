@@ -18,6 +18,12 @@ export const useFetchPatients = () => {
     return response.data;
   });
 };
+export const useFetchMedicines = () => {
+  return useQuery("medicines", async () => {
+    const response = await axiosInstance.get("/medicines");
+    return response.data;
+  });
+};
 
 export const useFetchPatientById = (id) => {
   return useQuery(["patient", id], async () => {
@@ -38,21 +44,32 @@ export const createPatient = async (patientData) => {
     throw error; // Rethrow the error to be caught by the caller
   }
 };
-
-export const createMedication = async (medicationData) => {
+export const createMedicine = async (medicineData) => {
   try {
-    const response = await axiosInstance.post("/medications", {
-      data: medicationData,
+    const response = await axiosInstance.post("/medicines", {
+      data: medicineData,
     });
     return response.data;
   } catch (error) {
     // Handle error here
-    console.error("Error creating patient:", error);
+    console.error("Error creating medicine:", error);
+    throw error; // Rethrow the error to be caught by the caller
+  }
+};
+export const deleteMedicine = async (medicineId, refetch) => {
+  try {
+    const response = await axiosInstance.delete(`/medicines/${medicineId}`);
+    refetch();
+    return response.data;
+  } catch (error) {
+    // Handle error here
+    console.error("Error deleting medicine:", error);
     throw error; // Rethrow the error to be caught by the caller
   }
 };
 
 export const deleteCondition = async (conditionId) => {
+  console.log("tes", conditionId);
   try {
     const response = await axiosInstance.put(`/conditions/${conditionId}`, {
       data: {
@@ -62,8 +79,40 @@ export const deleteCondition = async (conditionId) => {
     return response.data;
   } catch (error) {
     // Handle error here
-    console.error("Error creating patient:", error);
-    throw error;
+    console.error("Error deleting condition:", error);
+    throw error; // Rethrow the error to be caught by the caller
+  }
+};
+
+export const createMedication = async (medicationData) => {
+  try {
+    const response = await axiosInstance.post("/medications", {
+      data: medicationData,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error here
+    console.error("Error creating medication:", error);
+    throw error; // Rethrow the error to be caught by the caller
+  }
+};
+
+export const editMedicine = async (id, data) => {
+  try {
+    console.log(id, data);
+    const response = await axiosInstance.put(`/medicines/${id}`, {
+      data: {
+        med_brand: data.med_brand,
+        med_generic: data.med_generic,
+        med_type: data.med_type,
+        med_dosage: data.med_dosage,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error here
+    console.error("Error editing medicine:", error);
+    throw error; // Rethrow the error to be caught by the caller
   }
 };
 

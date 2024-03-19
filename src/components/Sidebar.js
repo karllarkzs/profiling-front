@@ -55,6 +55,19 @@ function Sidebar({ onLogout }) {
           </Avatar>
           <ListItemText sx={{ paddingLeft: "10px" }} primary="Create Patient" />
         </ListItem>
+        <ListItem button component={Link} to="/medicines">
+          <Avatar
+            sx={{
+              backgroundColor:
+                location.pathname === "/medicines"
+                  ? "rgb(188, 120, 255)"
+                  : "transparent",
+            }}
+          >
+            <AccountCircleIcon />
+          </Avatar>
+          <ListItemText sx={{ paddingLeft: "10px" }} primary="All Medicines" />
+        </ListItem>
         {!onLogout && (
           <ListItem button component={Link} to="/login">
             <Button variant="outlined" sx={{ width: "100%" }}>

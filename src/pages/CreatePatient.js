@@ -71,7 +71,6 @@ function CreatePatient() {
     e.preventDefault();
     try {
       await createPatient(formData);
-      // Optionally, you can clear the form after submission
       setFormData({
         first_name: "",
         middle_name: "",

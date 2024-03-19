@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar";
 import Home from "./pages/Dashboard";
 import Profile from "./pages/CreatePatient";
 import LoginPage from "./pages/Login";
+import Medicines from "./pages/Medicines";
 import Patient from "./pages/Patient";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { getUsers } from "./api";
@@ -84,7 +85,7 @@ function App() {
       ...prevState,
       isLoggedIn: false,
     }));
-    localStorage.removeItem("isLoggedIn"); // Remove authentication status from local storage
+    localStorage.removeItem("isLoggedIn");
   };
 
   const handleCloseSnackbar = () => {
@@ -115,6 +116,7 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/create-patient" element={<Profile />} />
                   <Route path="/patient/:id" element={<Patient />} />
+                  <Route path="/medicines" element={<Medicines />} />
                 </Routes>
               </div>
             </div>

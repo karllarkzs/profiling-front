@@ -29,8 +29,6 @@ function Dashboard() {
   const [selectedDate, setSelectedDate] = useState(null); // State for selected date
   const { data: patientsData, isLoading, isError, error } = useFetchPatients(); // Fetch patient data
 
-  console.log("PD", patientsData);
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
