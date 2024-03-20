@@ -40,6 +40,7 @@ function Patient() {
   const [selectedCondtionName, setSelectedConditionName] = useState("");
   const [selectedConditionDescription, setSelectedConditionDescription] =
     useState("");
+  const [selectedCondition, setSelectedCondition] = useState(null);
 
   const [isAddDiagnosticsModalOpen, setIsAddDiagnosticsModalOpen] =
     useState(false);
@@ -68,14 +69,16 @@ function Patient() {
     setIsAddConditionModalOpen(false);
   };
 
-  const handleOpenAddMedicationModal = () => {
+  const handleOpenAddMedicationModal = (condition) => {
+    // Pass the condition to the handler
+    setSelectedCondition(condition); // Set the selected condition
     setIsAddMedicationModalOpen(true);
   };
 
   const handleCloseAddMedicationModal = () => {
+    setSelectedCondition(null); // Reset the selected condition
     setIsAddMedicationModalOpen(false);
   };
-
   const handleOpenEditModal = (
     conditionId,
     conditionName,
@@ -273,12 +276,13 @@ function Patient() {
                     <Typography sx={{ fontSize: "15px" }}>
                       MEDICATIONS
                     </Typography>
-                    <IconButton onClick={() => handleOpenAddMedicationModal()}>
+                    <IconButton
+                      onClick={() => handleOpenAddMedicationModal(condition)}
+                    >
                       <AddCircleOutlinedIcon sx={{ fontSize: "20px" }} />
                     </IconButton>
                     <AddMedicationModal
-                      conditionId={condition.id}
-                      conditionName={condition.name}
+                      condition={selectedCondition} // Pass the selected condition
                       open={isAddMedicationModalOpen}
                       onClose={handleCloseAddMedicationModal}
                       refetchPatientData={refetch}
@@ -346,7 +350,7 @@ function Patient() {
                 <CardContent>
                   <Typography variant="h6">{diagnostic.name}</Typography>
                   <iframe
-                    src={`https://profiling-2024-45cbe2fd9ee2.herokuapp.com${diagnostic.url}`}
+                    src={`https://docs.google.com/viewer?url=https://profiling-2024-45cbe2fd9ee2.herokuapp.com${diagnostic.url}&embedded=true`}
                     width="100%"
                     height="300px"
                     title="Diagnostic PDF"

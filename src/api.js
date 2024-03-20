@@ -88,49 +88,16 @@ export const editCondition = async (
   }
 };
 
-export const createDiagnostic = async (formDataDiag, file) => {
+export const createDiagnostic = async (formDataDiag, imagePath) => {
   try {
-    const response = await axiosInstance.post("/diagnostics", {
-      data: formDataDiag,
+    await axiosInstance.post("/diagnostics", {
+      data: { filePath: imagePath, ...formDataDiag }, // Include imagePath inside data
     });
-
-    const diagnosticId = response.data.data.id;
-
-    console.log("respons", response.data);
-    const formData = new FormData();
-    formData.append("files", file);
-    formData.append("ref", "api::diagnostic.diagnostic");
-    formData.append("refId", diagnosticId);
-    formData.append("field", "diagnostic_file");
-    console.log("file", file);
-    try {
-      const response = await fetch(
-        "https://profiling-2024-45cbe2fd9ee2.herokuapp.com/api/upload",
-        {
-          method: "POST",
-          body: formData,
-          headers: {
-            Authorization:
-              "Bearer 56a9633bd0a665b317a390299fc1ddc21ab536ed3dbe39550c5cfb72ca573b91cb7d0edb58c8e4782841bd3c90f79d79c21db12cb6a7b1190b2c377812d67b5fdf629c88c5c8e522f1db78892c9da827b0933e5a466bf7cfe700b1359b475462ba68d9bded424efa6f3efd1da5d8db69ab4e6e942a8c715b217f31739b485af1",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to upload file");
-      }
-
-      console.log(response.body);
-    } catch (error) {
-      console.error("Error uploading file:", error);
-    }
   } catch (error) {
-    // Handle error here
-    console.error("Error creating patient:", error);
-    throw error; // Rethrow the error to be caught by the caller
+    console.error("Error creating diagnostic:", error);
+    throw error;
   }
 };
-
 export const useFetchDiagnostics = () => {
   return useQuery("diagnostics", async () => {
     try {

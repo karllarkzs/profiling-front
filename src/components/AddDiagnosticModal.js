@@ -5,9 +5,12 @@ import { createDiagnostic } from "../api";
 
 function AddDiagnosticsModal({ open, onClose }) {
   const [file, setFile] = useState(null);
+  const [fileUrl, setFileUrl] = useState(null);
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+    setFileUrl(URL.createObjectURL(selectedFile)); // Create URL for the selected file
   };
 
   const handleUpload = async () => {
@@ -15,7 +18,7 @@ function AddDiagnosticsModal({ open, onClose }) {
     formData.append("file", file);
 
     try {
-      await createDiagnostic(formData, file);
+      await createDiagnostic(formData, fileUrl); // Pass fileUrl to createDiagnostic
       console.log("Diagnostic PDF uploaded successfully");
     } catch (error) {
       console.error("Error uploading diagnostic PDF:", error);
@@ -31,7 +34,7 @@ function AddDiagnosticsModal({ open, onClose }) {
           <Typography variant="h6" gutterBottom>
             Upload Diagnostic PDF
           </Typography>
-          <input type="file" onChange={handleFileChange} />
+          <input type="file" id="fileInput" onChange={handleFileChange} />
           <Box mt={2} display="flex" justifyContent="flex-end">
             <Button onClick={handleUpload} variant="contained" color="primary">
               Upload

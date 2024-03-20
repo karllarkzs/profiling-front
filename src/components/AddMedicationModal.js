@@ -10,21 +10,16 @@ import {
 
 import { createMedication } from "../api";
 
-function AddMedicationModal({
-  open,
-  onClose,
-  conditionId,
-  conditionName,
-  refetchPatientData,
-}) {
+function AddMedicationModal({ open, onClose, condition, refetchPatientData }) {
   const [formData, setFormData] = useState({
-    conditionId: conditionId,
     med_generic: "",
     med_brand: "",
     med_dosage: "",
     med_type: "",
     note: "",
   });
+
+  console.log("add modal", condition ? condition.id : "");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,10 +29,11 @@ function AddMedicationModal({
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createMedication(formData);
-      // Optionally, you can clear the form after submission
+      await createMedication({
+        conditionId: condition ? condition.id : "",
+        ...formData,
+      });
       setFormData({
-        conditionId: conditionId,
         med_generic: "",
         med_brand: "",
         med_dosage: "",
@@ -45,13 +41,25 @@ function AddMedicationModal({
         note: "",
       });
       refetchPatientData();
+      onClose(); // Close the modal after successful submission
     } catch (error) {
       console.error("Error creating medication:", error);
     }
   };
 
+  const handleClose = () => {
+    setFormData({
+      med_generic: "",
+      med_brand: "",
+      med_dosage: "",
+      med_type: "",
+      note: "",
+    });
+    onClose(); // Call onClose to close the modal and perform any additional actions
+  };
+
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={handleClose}>
       <Paper
         sx={{
           position: "absolute",
@@ -63,7 +71,7 @@ function AddMedicationModal({
         }}
       >
         <Typography variant="h6" gutterBottom>
-          Add Medication on condition {conditionName}
+          Add Medication on condition {condition ? condition.name : ""}
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
